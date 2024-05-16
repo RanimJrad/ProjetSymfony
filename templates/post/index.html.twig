@@ -1,0 +1,171 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home Page!{% endblock %}
+
+{% block body %}
+<style>
+    
+    img{
+        border-radius: 10px;
+    }
+
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      --bs-gutter-x: -15rem;
+    }
+
+    .posts{
+        padding: 40px;
+        margin-bottom: 10px; /* Add unit of measurement (e.g., px) */
+        margin-top:40px;
+        width:600px;
+        height600px;
+        margin-bottom: 60px;
+        margin-left: -60px;
+        margin-right:50px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 4px 4px #92b8db; 
+    }
+
+    #out{
+        margin-left:10px;
+        font-family: 'Alkatra', cursive;
+        color:#4e618a;
+    }
+
+    #welcome{
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        margin-top: 30px;
+      }
+      
+    #welcome h1:nth-child(1) {
+        color: #189ab4;
+        font-family: 'Alkatra', cursive;
+        font-weight: 800;
+        font-size: 25px;
+        margin: 0 0 0 35%;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 170px;
+        animation: type 2.2s steps(40,end) forwards;
+      }
+      
+    #welcome h1:nth-child(2) {
+        opacity: 0;
+        font-family: 'Alkatra', cursive;
+        margin: 0 auto auto auto;
+        background: linear-gradient(to right, #92b8db, #189ab4, #92b8db);
+        font-weight: 800;
+        font-size: 50px;  
+        width: 430px;
+        -webkit-background-clip : text;
+        -webkit-text-fill-color: transparent;
+        overflow: hidden;
+        animation: shring-animation 2.2s steps(45,end) 2s forwards, blink .5s step-end infinite alternate;
+      }
+      
+    @keyframes shring-animation {
+        0% {
+          background-position: 0 0;
+          opacity: 0;
+          width: 0;
+        }
+        1% {
+          background-position: 0 0;
+          opacity: 1;
+          border-right: 1px solid transparent;
+        }
+        50% {
+          background-position: 150px 0;
+          opacity: 1;
+          border-right: 1px solid transparent;
+        }
+        100% {
+          background-position: 400px 0;
+          opacity: 1;
+          border-right: 1px solid transparent;
+        }
+      }
+      
+    @keyframes type {
+        0% {
+          width: 0;
+        }
+        1%, 99%{
+          border-right: 1px solid transparent;
+        }
+        100%{
+          border-right: none;
+        }
+      }
+      
+    @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+
+
+    *{
+        font-family: 'Alkatra', cursive;
+    }
+</style>
+<div id="welcome">
+    <h1>Bienvenu dans </h1>
+    <h1>MaPalette</h1>
+</div>
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success mt-5 text-center">
+        {{ message }}
+    </div>
+{% endfor %}
+
+<div class="row">
+    {% for post in posts %}
+        <div class="col-md-4">
+            <section class="posts">
+                <article>
+                    <span class="badge" style="background-color:#DB6A8F;border-radius:20px;color:black;height:50px;width:160px;margin-left:400px;">
+                        <p style="margin-top:15px;">{{ post.category.title }}</p>
+                    </span>
+                    <h2 style="color:#92b8db;margin-top:-50px;">{{ post.title }}</h2>
+                    <div class="metadate">
+                        {% if post.author %}
+                            {{ post.author.firstName }} {{ post.author.lastName }}
+                        {% else %}
+                            utilisateur
+                        {% endif %}
+                        <br>
+                        {{ post.createdAt | date('Y-m-d')}} à {{ post.createdAt | date('H:i') }}
+                    </div>
+                    <div class="content">
+                        {% if post.imageName %}
+                            <img src="{{ vich_uploader_asset(post, 'imageFile') }}" width="300" height="200" alt="" class="mt-3 mb-3" style="margin-left:80px;">
+                        {% else %}
+                            <img src="https://picsum.photos/seed/picsum/300/200" alt="" class="mt-3 mb-3">
+                        {% endif %}
+                        <p>{{ post.content }}</p><hr>
+                        {{ post.comments | length  }} {{ (post.comments | length <= 1) ? 'Commentaire' : 'Commentaires' }}<br><hr>
+                        <a href="{{ path('post_show', {'id' : post.id}) }}"><span style="color:#DB6A8F;">En savoir plus</span></a>
+                    </div>
+                </article>
+            </section>
+        </div>
+        {% if loop.index % 2 == 0 %}
+            </div><div class="row">
+        {% endif %}
+    {% endfor %}
+</div>
+
+<div class="navigation mt-5">
+    {{ knp_pagination_render(posts) }}
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+{% form_theme registrationForm 'bootstrap_4_layout.html.twig' %}
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<style>
+    *{
+        font-family: 'Alkatra', cursive;
+    }
+    #welcome{
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        margin-top: 30px;
+      }
+      
+    #welcome h1:nth-child(1) {
+        color: #189ab4;
+        font-family: 'Alkatra', cursive;
+        font-weight: 800;
+        font-size: 25px;
+        margin: 0 0 0 35%;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 170px;
+        animation: type 2.2s steps(40,end) forwards;
+      }
+      
+    #welcome h1:nth-child(2) {
+        opacity: 0;
+        font-family: 'Alkatra', cursive;
+        margin: 0 auto auto auto;
+        background: linear-gradient(to right, #92b8db, #189ab4, #92b8db);
+        font-weight: 800;
+        font-size: 50px;  
+        width: 430px;
+        -webkit-background-clip : text;
+        -webkit-text-fill-color: transparent;
+        overflow: hidden;
+        animation: shring-animation 2.2s steps(45,end) 2s forwards, blink .5s step-end infinite alternate;
+      }
+      
+    @keyframes shring-animation {
+        0% {
+          background-position: 0 0;
+          opacity: 0;
+          width: 0;
+        }
+        1% {
+          background-position: 0 0;
+          opacity: 1;
+          border-right: 1px solid transparent;
+        }
+        50% {
+          background-position: 150px 0;
+          opacity: 1;
+          border-right: 1px solid transparent;
+        }
+        100% {
+          background-position: 400px 0;
+          opacity: 1;
+          border-right: 1px solid transparent;
+        }
+      }
+      
+    @keyframes type {
+        0% {
+          width: 0;
+        }
+        1%, 99%{
+          border-right: 1px solid transparent;
+        }
+        100%{
+          border-right: none;
+        }
+      }
+      
+    @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+</style>
+<div id="welcome">
+    <h1>Bienvenu dans </h1>
+    <h1>MaPalette</h1>
+</div>
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.firstName) }}
+        {{ form_row(registrationForm.lastName) }}
+        {{ form_row(registrationForm.password, {
+            label: 'Password'
+        }) }}
+        <button type="submit" class="btn mt-3" style="background-color:#92b8db;border-radius:10px;">Créer un compte</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}

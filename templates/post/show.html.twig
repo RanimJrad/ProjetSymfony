@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+{% form_theme commentForm 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Show Page{% endblock %}
+
+{% block body %}
+    <style>
+        .posts{
+            padding: 40px;
+            margin-bottom: 40;
+            margin-top:40px;
+            width:600px;
+            margin-bottom: 60px;
+            margin-left: 350px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 4px 4px #92b8db; 
+        }
+        *{
+            font-family: 'Alkatra', cursive;
+        }
+        img{
+            border-radius: 10px;
+        }
+
+        
+    </style>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success mt-5 text-center" style="border-radius:10px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+        <section class="posts">
+            <article>
+                <span class="badge" style="background-color:#DB6A8F;border-radius:20px;color:black;height:50px;width:160px;margin-left:400px;"><p style="margin-top:15px;">{{ post.category.title }}</p></span>
+                <h2 style="color:#92b8db;margin-top:-50px;">{{ post.title }}</h2>
+                <div class="metadate">
+                    {% if post.author %}
+                            {{ post.author.firstName }} {{ post.author.lastName }}
+                    {% else %}
+                            utilisateur
+                    {% endif %}
+                    <br>
+                    {{ post.createdAt | date('Y-m-d')}} à {{ post.createdAt | date('H:i') }}
+                </div>
+                    <div class="content">
+                        {% if post.imageName %}
+                            <img src="{{ vich_uploader_asset(post, 'imageFile') }}" width="300" height="200" alt="" class="mt-3 mb-3" style="margin-left:80px;">
+                        {% else %}
+                            <img src="https://picsum.photos/seed/picsum/300/200" alt="" class="mt-3 mb-3">
+                        {% endif %}
+                        <p>{{ post.content }}</p>
+                        {% if app.user == post.author %}
+                        <br><hr>
+                        <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn mt-2 " style="margin-left:150px;background-color:#FE895E;color:black;border-radius:10px;">Modifier</a>
+                        <a href="{{ path('delete_post', {'id': post.id}) }}" class="btn " style="margin-left:300px;background-color:#FE277E;color:black;border-radius:10px;margin-top:-65px;">Supprimer</a>                        
+                        {% endif %}
+                    </div>
+            </article>
+        </section>
+        
+        <h2 class="mt-5" >{{ post.comments | length  }} {{ (post.comments | length <= 1) ? 'Commentaire' : 'Commentaires' }}</h2>
+        <section class="mt-5">
+            {% for comment in post.comments %}
+                <div class="card-header" >
+                    {{ comment.author}} <small> {{ comment.createdAt | date('Y-m-d')}} at {{ comment.createdAt | date('H:i') }}</small>
+                </div>
+                <div class="card-body">
+                    <p >{{ comment.content }}</p>
+                </div>
+                {% if app.user == post.author %}
+                    <a href="{{ path('delete_comment', {'id': comment.id}) }}" class="btn btn-danger" onclick="return confirm('Etes-vous sûr de supprimer ce commentaire?') ;" >Supprimer</a>
+                {% endif %}
+            {% endfor %}
+        </section>
+    <hr>        
+    {% if app.user %}
+    <h2 class="mt-5" style="color:#92b8db">Ajouter un commentaire</h2>
+    {{ form_start(commentForm) }}
+    {{ form_widget(commentForm) }}
+    <button class="btn mt-5" style="background-color:#92b8db;border-radius:10px;">Envoyer</button>
+    {{ form_end(commentForm) }}
+ {% endif %}
+            
+{% endblock %}

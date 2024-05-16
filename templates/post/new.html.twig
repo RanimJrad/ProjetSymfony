@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block title %}Create a post{% endblock %}
+
+{% block body %}
+<style>
+    *{
+        font-family: 'Alkatra', cursive;
+    }
+</style>
+    <h1 class="mt-5" style="color:#92b8db">Ajouter une publication</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+        <button class="btn mt-5" style="background-color:#92b8db;border-radius:10px;">Publier</button>
+    {{ form_end(form) }}
+{% endblock %}
